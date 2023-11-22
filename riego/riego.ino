@@ -32,8 +32,6 @@ DHT dht(DHTPIN, DHTTYPE);
 #define CONFIG_FOTORESISTOR          pinMode(FOTORESISTOR_PIN, INPUT)  
 #define LEER_FOTORESISTOR            analogRead(FOTORESISTOR_PIN)
 
-#define INTERVALO                     2000
-
 
 /*CONFIGURACION DE SENSOR DE HUMEDAD SUELO
 Los valores obtenidos van desde 0 sumergido en agua, a 1023 en el aire (o en un suelo muy seco). 
@@ -67,12 +65,13 @@ Por lo tanto, se obtendra una señal LOW cuando el suelo no está húmedo, y HIG
 
 //variables booleanas 
 bool mucha_luz = 0; //ldr
-bool calor = 0;
-bool frio = 0;
+bool frio = 0; //dth
 
-bool estado_riego = 0;
-bool humedad_suelo = 0; 
+bool estado_riego = 0; //define si esta prendido la bomba
+bool humedad_suelo = 0; //estado del sensor de humedad
 
+
+#define INTERVALO                     2000
 
 void setup() {
   Serial.begin(9600);
@@ -80,7 +79,7 @@ void setup() {
   CONFIG_FOTORESISTOR;
   CONFIG_HUM;
   CONFIG_RIEGO;
-  dht.begin();  // Corrige el error tipográfico aquí
+  dht.begin(); 
   //ledtest
   CONFIG_LED_TEST;
   ACTUALIZAR_LED_TEST(0);
@@ -91,26 +90,23 @@ DTH11();
 Riego();
 Fotoresistor();
 HumedadSuelo();
-
 LedTest();
-MostrarValores(); // esto no va 
+MostrarValores(); // esto no va al fin
 }
 
 void Riego(){  
   
-  if(humedad_suelo == 1 && mucha_luz == 0 && frio == 0 ) { Serial.println("RIEGO ANDANDO");        estado_riego = 0; }
-  else {                                                   Serial.println("RIEGO APAGADO ");       estado_riego = 1; }
+  if(humedad_suelo == 1 && mucha_luz == 0 && frio == 0 ) {  Serial.println("RIEGO ANDANDO");        estado_riego = 0; }
+  else {                                                    Serial.println("RIEGO APAGADO ");       estado_riego = 1; }
   ACTUALIZAR_RIEGO(estado_riego);
 }
 
 void DTH11(){
   //dth11
-  //float humedad = dht.readHumidity();
+  
   float temperatura = dht.readTemperature();
-  if (isnan(temperatura)) return;  //
-  //if (isnan(humedad) || isnan(temperatura)) return;
-  if(temperatura > MAX_TEMP) calor = 1;
-  else calor = 0;
+  if (isnan(temperatura)) return;  // si detecta algun error retorna
+  
   if(temperatura < MIN_TEMP) frio = 1;
   else frio = 0;
 }
@@ -118,17 +114,9 @@ void DTH11(){
 
 void Fotoresistor(){
   // menor valor mas luz
-  static unsigned long antMillis = 0;        
-  if(millis() - antMillis < INTERVALO) return;
-  antMillis = millis();
-
   int dato = LEER_FOTORESISTOR;
   if(dato < MAX_LUZ) mucha_luz = 1;
   else mucha_luz = 0;
-  
- // Serial.println("DATO DEL LDR: ");
-  //Serial.println(dato);
-  //if(mucha_luz1) 
 }
 
 void HumedadSuelo(){
