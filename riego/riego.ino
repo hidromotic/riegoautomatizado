@@ -17,6 +17,7 @@ Mini Bomba De Agua Sumergible 3v 5v Dc Arduino
 sensor de temperatura y humedad ambiente DTH11
 Modulo Sensor De Luz Con Fotoresistor
 arduino mega
+uln2003
 */
 
 
@@ -98,7 +99,7 @@ void Riego(){
   
   if(humedad_suelo == 1 && mucha_luz == 0 && frio == 0 ) estado_riego = 0;
   else estado_riego = 1;
-  ACTUALIZAR_RIEGO(estado_riego);
+  ACTUALIZAR_RIEGO(estado_riego); //el motor funciona en 0 osea false, a causa del uln2003 que lo invierte
 }
 
 void DTH11(){
