@@ -96,8 +96,8 @@ MostrarValores(); // esto no va
 
 void Riego(){  
   
-  if(humedad_suelo == 1 && mucha_luz == 0 && frio == 0 ) {  Serial.println("RIEGO ANDANDO");        estado_riego = 0; }
-  else {                                                    Serial.println("RIEGO APAGADO ");       estado_riego = 1; }
+  if(humedad_suelo == 1 && mucha_luz == 0 && frio == 0 ) estado_riego = 0;
+  else estado_riego = 1;
   ACTUALIZAR_RIEGO(estado_riego);
 }
 
