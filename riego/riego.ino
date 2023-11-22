@@ -44,7 +44,7 @@ Por lo tanto, se obtendra una señal LOW cuando el suelo no está húmedo, y HIG
 #define LEER_HUMEDAD_SUELO                digitalRead(PIN_HUM_SUELO)
 
 //CONFIGURACION BOMBA DE AGUA PARA EL RIEGO
-#define PIN_RIEGO                    12
+#define PIN_RIEGO                    11
 #define CONFIG_RIEGO                 pinMode(PIN_RIEGO, OUTPUT)
 #define ACTUALIZAR_RIEGO(x)          digitalWrite(PIN_RIEGO, x)
 
@@ -91,7 +91,7 @@ Riego();
 Fotoresistor();
 HumedadSuelo();
 LedTest();
-MostrarValores(); // esto no va al fin
+MostrarValores(); // esto no va 
 }
 
 void Riego(){  
@@ -135,9 +135,9 @@ void HumedadSuelo(){
 
 //esto no va, es para correxion de errores
 void MostrarValores(){
-  unsigned long antMillis=0;
-  if(millis() - antMillis < INTERVALO) return;
-  antMillis = millis();
+  static unsigned long anMillis=0;
+  if(millis() - anMillis < INTERVALO) return;
+  anMillis = millis();
 
   //dth11
   float humedad = dht.readHumidity();
